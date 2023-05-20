@@ -1,6 +1,4 @@
 import './css/styles.css';
-
-const DEBOUNCE_DELAY = 300;
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
 
@@ -32,7 +30,7 @@ const showCountriesList = countries => {
   const countriesHTML = countries
     .map(
       country =>
-        `<li><img src="${country.flags.svg}" alt="${country.name.official}">${country.name.official}</li>`
+        `<li><img src="${country.flags.svg}" alt="${country.name}">${country.name}</li>`
     )
     .join('');
 
@@ -43,8 +41,8 @@ const showCountryInfo = country => {
   const languages = country.languages.map(lang => lang.name).join(', ');
   const countryHTML = `
     <div class="country-card">
-      <img class="country-flag" src="${country.flags.svg}" alt="${country.name.official}">
-      <h2 class="country-name">${country.name.official}</h2>
+      <img class="country-flag" src="${country.flags.svg}" alt="${country.name}">
+      <h2 class="country-name">${country.name}</h2>
       <p><span class="country-info-label">Capital:</span> ${country.capital}</p>
       <p><span class="country-info-label">Population:</span> ${country.population}</p>
       <p><span class="country-info-label">Languages:</span> ${languages}</p>
