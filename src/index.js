@@ -1,22 +1,18 @@
-import './css/styles.css';
 import debounce from 'lodash.debounce';
 import Notiflix from 'notiflix';
+import { fetchCountries } from './fetchCountries.js';
+import './css/styles.css';
 
 const searchBox = document.getElementById('search-box');
 const countriesList = document.getElementById('countries-list');
 const countryInfo = document.getElementById('country-info');
 
-const fetchCountries = async name => {
-  const response = await fetch(
-    `https://restcountries.com/v2/name/${name}?fields=name,flags,capital,population,languages`
-  );
+const clearCountriesList = () => {
+  countriesList.innerHTML = '';
+};
 
-  if (!response.ok) {
-    throw new Error('Unable to fetch countries.');
-  }
-
-  const data = await response.json();
-  return data;
+const clearCountryInfo = () => {
+  countryInfo.innerHTML = '';
 };
 
 const showCountriesList = countries => {
@@ -56,8 +52,8 @@ const handleSearch = debounce(async () => {
   const searchTerm = searchBox.value.trim();
 
   if (searchTerm === '') {
-    countriesList.innerHTML = '';
-    countryInfo.innerHTML = '';
+    clearCountriesList();
+    clearCountryInfo();
     return;
   }
 
@@ -66,10 +62,18 @@ const handleSearch = debounce(async () => {
 
     if (countries.length === 1) {
       showCountryInfo(countries[0]);
-      countriesList.innerHTML = '';
+      clearCountriesList();
     } else {
+      if (countries.length > 10) {
+        Notiflix.Notify.warning(
+          'Too many matches found. Please enter a more specific name.'
+        );
+        clearCountryInfo();
+        return;
+      }
+
       showCountriesList(countries);
-      countryInfo.innerHTML = '';
+      clearCountryInfo();
     }
   } catch (error) {
     Notiflix.Notify.failure('Oops, there is no country with that name.');
